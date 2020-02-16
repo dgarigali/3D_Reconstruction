@@ -78,9 +78,23 @@ Hence, after finding R and T, the Rigid Body transformation is:
 
 ![Screenshot](images/rigid_body.png)
 
-**Iterative Closest Point (ICP):**
+**Iterative Closest Point (ICP):** For each Rigid Body transformation, there is error accumulation mainly due to the camera calibration and the math calculations. ICP method can be used to refine these transformations by minimizing the different between two 3D point cloud. The method performs the following steps:
 
+```
+1) Transform 3D point cloud to referential 3D point cloud
+2) For each transformed point, find closest 3D point regarding to the referential one (known as closest neighbour)
+3) Calculate error between each transformed point and the respective closest neighbour
+4) Exclude points with error above given threshold
+5) Obtain parameters of the new transformation between transformed 3D point cloud and neirest neighbours
+6) Repeat process for a given number of iterations
+```
 
+This method has the disadvantage of being time consuming. Therefore, the last parameter of the function **rigid_body3D** is a boolean which indicates if we want to run or not the ICP (1 to use it).
 
+**Propagate transformations**: The transformations are calculated between consecutive images (i.e., H12 for transformation between images 1 and 2, H23 for transformation between images 2 and 3, etc). To obtain the transformations between each image and the reference image (which in this case is the image 1), the transformations must be propagated (i.e., multiplied) from the given image to image 1. For instance, to obtain the transformation from image 3 to image 1:
 
- 
+```
+H31 = H21 * H32
+```
+
+Note that to obtain, for example, H21, we simply apply the inverse of H12 (which is the one we actually obtain from the previous step). 
