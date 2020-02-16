@@ -10,3 +10,4 @@ and depth images:
 
 we obtain the following 3D point cloud:
 
+![Screenshot](images/3D_result.png)
