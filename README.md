@@ -15,8 +15,11 @@ we obtain the following 3D point cloud:
 ## Approach
 
 This project was divided into three scripts:
+
 **rigid_body3D.m**: function that returns the 3D Rigid Body transformation between each image and the reference image (i.e., first image)
+
 **plot3D.m**: function that returns the 3D Point Cloud based on sequence of depth and RGB images and the corresponding Rigid Body transformations
+
 **run.m**: main script that calls the two previous scripts to obtain the 3D reconstruction of the chosen dataset.
 
 ## rigid_body3D.m
@@ -55,4 +58,29 @@ This model has 12 degrees of freedom (i.e., 12 parameters from H1 to H12). As ea
 
 After applying RANSAC, the 3 ouliers are removed:
 
-![Screenshot](images/after_RANSAC.png)  
+![Screenshot](images/after_RANSAC.png)
+
+**Obtain Rigid Body transformations:** After finding the 3D matches that are inliers, we can finally get the Rigid Body transformations. This corresponds to solve an optimization problem:
+
+![Screenshot](images/opt_problem.png)
+
+Due to the constraints of the orthogonal matrix (R), it cannot be solved by applying Least Squares. The translation component (T) can be easily obtained from the average points:
+
+![Screenshot](images/opt_problem2.png)
+
+Obtaining R is equivalent to solving the Procrustes Orthogonal Problem that consists of finding the orthogonal matrix that best fits to the normalized points. It can be proved that solving that problems corresponds to solving:
+
+![Screenshot](images/opt_problem3.png)
+
+where U and V are obtained by applying the Single Value Decomposition (SVD) to the normalized points.
+
+Hence, after finding R and T, the Rigid Body transformation is:
+
+![Screenshot](images/rigid_body.png)
+
+**Iterative Closest Point (ICP):**
+
+
+
+
+ 
