@@ -98,3 +98,31 @@ H31 = H21 * H32
 ```
 
 Note that to obtain, for example, H21, we simply apply the inverse of H12 (which is the one we actually obtain from the previous step). 
+
+## plot3D.m
+
+This function simply applies the camera model to obtain the RGB value and the correspondent 3D point for each image in the reference frame of the first image by using the transformations returned from the function **rigid_body3D**. Furthermore, these values are all represented in the same 3D point cloud.
+
+## To run the program
+
+To test the program, simply execute the file **run.m** in Matlab. This script reads the images from a chosen dataset, reads the camera parameters and calls the functions of the above-mentioned scripts to build a 3D reconstruction of the dataset scene.
+
+To select a dataset, edit the line 11 of the file **run.m**. For example, to use the "room" dataset:
+
+```
+folder_name = 'datasets/room/';
+```
+
+To use ICP, change the last parameter of the function in line 32 of the file **run.m** from 0 to 1:
+
+```
+[transforms] = rigid_body3D(depth_list, rgb_list, cam_params, 1);
+```
+
+To change the RANSAC parameters, edit the lines 64-66 of the file **rigid_body3D.m**
+
+```
+threshold = 0.01; %set threshold (|r_i|<epsilon) - inlier criteria
+bigP = 0.99; %probability of success after k tries
+smallP = 0.45; %fraction of matches that are inliers - pessimistic assumption
+```
